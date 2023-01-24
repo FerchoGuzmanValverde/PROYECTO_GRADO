@@ -3,11 +3,15 @@
  */
 import bodyParser from 'body-parser';
 import dotenv from "dotenv";
+import express from "express";
+import cors from 'cors';
+
 import UserRoutes from './routes/user.routes.js';
 import PatientRoutes from './routes/patient.routes.js';
 import HistoryRoutes from './routes/history.routes.js';
-import express from "express";
-import cors from 'cors';
+import BiopsyRoutes from './routes/biopsy.routes.js';
+import NucleicellsRoutes from './routes/nucleicells.routes.js';
+import ImageRoutes from './routes/image.routes.js';
 
 //Instantiate a express server
 const server = express();
@@ -41,6 +45,12 @@ server.use('/api', UserRoutes);
 server.use('/api', PatientRoutes);
 //Subs all History routes as API's
 server.use('/api', HistoryRoutes);
+//Subs all Biopsy routes as API's
+server.use('/api', BiopsyRoutes);
+//Subs all NucleiCells routes as API's
+server.use('/api',NucleicellsRoutes);
+//Subs all Image routes as API's
+server.use('/api', ImageRoutes);
 
 /***
  * Set Port and Listener
