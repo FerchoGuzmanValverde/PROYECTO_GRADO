@@ -1,0 +1,18 @@
+/* Footer container setting */
+.container_footer {
+  margin: auto;
+  text-align: center;
+  color: white;
+}
+
+/* Footer links setting */
+.container_footer i {
+  margin: 10px;
+}
+
+/* Footer component setting */
+footer {
+  background-color: black;
+  margin-left: 0%;
+  margin-right: 0%;
+}

@@ -31,9 +31,9 @@ server.use(express.urlencoded({ extended: true }));
 
 //Enable hidden configuration data
 dotenv.config();
-//Set cors options
+//Set cors options for allowed fronts to make requests
 var corsOptions = {
-    origin: "http://localhost:8081"
+    origin: "http://localhost:3000"
   };
 
 //Subs cors to handle communication configuration

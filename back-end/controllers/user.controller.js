@@ -1,5 +1,6 @@
 //import User from "../models/user.model.js"
 import { Pool } from '../database/db.config.js'
+import jwt from "jsonwebtoken";
 
 /**
  * Create a new User
@@ -99,25 +100,31 @@ export const LogDeleteUser = async (req, res) => {
 }
 
 /**
- * Login
+ * AuthUser
  * @param { User } req 
  * @param { response } res 
  */
-export const Login = async (req, res) => {
-    const { userName, password } = req.body;
+export const AuthUser = async (req, res) => {
+    /*const { userName, password } = req.body;
 
     try {
         //Verify the user exists
-        const [rows] = await pool.query("SELECT * FROM user WHERE userName = ? AND password = ?", [userName, password]);
+        const [rows] = await Pool.query("SELECT * FROM user WHERE userName = ? AND password = ?", [userName, password]);
       
         if (rows.length==0)
             return res.status(401).json({ message: 'Usuario o contraseña incorrecto!!' });
+        
+        const token = jwt.sign({ idUser:rows[0].idUser, userName:rows[0].userName }, "GVF0026694", { expiresIn: '6h' });
+
+        console.log("USUARIO EN CONTROLADOR", rows[0])
+        res.status(201).json({user:{ idUser:rows[0].idUser, userName }, token: token})
+        console.log(res.json())
       
-        return res.status(201).json({user:{ id:rows.insertId, userName, macAddress }});
+        return res.status(201).json({user:{ id:rows[0].id, userName }, token});
     } catch (err) {
         console.log(err)
         return res.status(400).json({ message: "Some error occurred while authenticating the User." || err });
-    }
+    }*/
 }
 
 /**

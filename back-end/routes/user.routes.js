@@ -1,6 +1,6 @@
 //Import dependencies
 import express from "express";
-import { Create, LogDeleteUser, Read, ReadWithID, UpdateUser } from "../controllers/user.controller.js"
+import { Create, LogDeleteUser, Read, ReadWithID, UpdateUser, AuthUser } from "../controllers/user.controller.js"
 
 //Create routes
 const router = express.Router();
@@ -38,6 +38,13 @@ router.post('/update-user', async (req, res) => {
  */
 router.post('/delete-user', async (req, res) => {
     await LogDeleteUser(req, res);
+});
+
+/**
+ * Subscribe authentication user API
+ */
+router.post('/auth-user', async (req, res) => {
+    await AuthUser(req, res);
 });
 
 export default router

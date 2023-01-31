@@ -1,0 +1,48 @@
+/* Images settings */
+.img_01 {
+  width:100%;
+}
+
+.img_02 {
+  width: 20px;
+}
+
+/* Links settings */
+.link_navbar {
+  width:25% !important;
+  color: white;
+}
+
+.link_nav {
+  color: white;
+}
+
+.link_nav:active {
+  background-color: black;
+}
+
+/* Navbar top settings */
+.navs_top {
+  background-color: #222222 !important;
+}
+
+/* Navbar links settings */
+.navs_top a {
+  float: right !important;
+  text-decoration: none;
+}
+
+/* Navbar responsive settings */
+.nav_in_div::-webkit-scrollbar {
+  display: none;
+}
+
+.nav_in_div img {
+  width: 80px;
+  height: 80px;
+}
+
+.nav_in_div a {
+  padding: 8px 16px !important;
+  text-decoration: none;
+}
