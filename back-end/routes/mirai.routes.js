@@ -2,12 +2,12 @@
 import express from "express";
 
 import {
+    Create,
+    Update,
     LogDelete,
     ReadAll,
-    FindById,
-    Update,
-    Create
-} from "../controllers/patient.controller.js";
+    FindById
+} from "../controllers/mirai.controller.js";
 
 //Create router
 const router = express.Router();
@@ -15,35 +15,35 @@ const router = express.Router();
 /**
  * Subs CREATE
  */
-router.post("/new-patient", async (req, res) => {
+router.post("/new-mirai", async (req, res) => {
     await Create(req, res);
 });
 
 /**
  * Subs READ ALL
  */
-router.get("/read-patients", async (req, res) => {
+router.get("/read-mirais", async (req, res) => {
     await ReadAll(req, res);
 })
 
 /**
  * Subs READ WITH ID
  */
-router.post("/read-patient", async (req, res) => {
+router.post("/read-mirai", async (req, res) => {
     await FindById(req, res);
 });
 
 /**
  * Subs UPDATE
  */
-router.patch("/update-patient", async (req, res) => {
+router.patch("/update-mirai", async (req, res) => {
     await Update(req, res);
 });
 
 /**
  * Subs LOGICAL DELETE
  */
-router.delete("/delete-patient", async (req, res) => {
+router.delete("/delete-mirai", async (req, res) => {
     await LogDelete(req, res);
 });
 
