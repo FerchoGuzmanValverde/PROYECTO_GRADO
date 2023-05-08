@@ -1,98 +1,99 @@
-//Import dependencies
-import { Pool } from '../database/db.config.js'
+//Import Dependencies
+import * as historyService from "../services/history.service.js";
+import * as historyValidator from "../validator/validators.js";
 
 /**
- * Create a new History
- * @param { History } req 
- * @param { response } res 
+ * CREATE
+ * @param { History } req
+ * @param { response } res
  */
 export const Create = async (req, res) => {
-    const { historyCode, description, idPatient } = req.body;
+    const { descripcion, idPaciente } = req.body;
+    const { errors, isValid } = historyValidator.historyValidator(req.body);
+
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
 
     try {
-
-        //Validations
-        
-        //Insert new history
-        const [rows] = await Pool.query("INSERT INTO history (historyCode, description, idPatient) VALUES (?, ?, ?)",
-        [historyCode, description, idPatient]);
-        return res.status(200).json(rows);
-
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while creating the History." || err });
+        //Create history in the database
+        const { historia } = await historyService.create(descripcion, idPaciente);
+        //Return the new history
+        res.json({ historia });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    
-}
+};
 
 /**
- * Read History
- * @param { } req 
- * @param { response } res 
+ * READ ALL
+ * @param { } req
+ * @param { response } res
  */
-export const Read = async (req, res) => {
-
+export const ReadAll = async (req, res) => {
     try {
-        const [rows] = await Pool.query("SELECT * FROM history");
+        //Read histories from database
+        const rows = await historyService.readAll();
         return res.status(200).json(rows);
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while reading Histories." || err });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    
-}
+};
 
 /**
- * Read History with ID
- * @param { idHistory } req 
- * @param { response } res 
+ * UPDATE
+ * @param { History } req
+ * @param { response } res
  */
-export const ReadWithID = async (req, res) => {
-    
-    try {
-        const [rows] = await Pool.query("SELECT * FROM history WHERE idHistory = ?", [req.body.id]);
-        return res.status(200).json(rows);
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while reading the History." || err });
+export const Update = async (req, res) => {
+    const { idHistoria, descripcion, idPaciente } = req.body;
+    const { errors, isValid } = historyValidator.historyValidator(req.body);
+
+    if (!isValid) {
+        return res.status(400).json(errors);
     }
-    
-}
+
+    try {
+        //Update history in the database
+        const { historia } = await historyService.update(idHistoria, descripcion, idPaciente);
+        //Return the updated history
+        res.json({ historia });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
 /**
- * Update History
- * @param { History } req 
- * @param { response } res 
+ * LOGICAL DELETE
+ * @param { History } req
+ * @param { response } res
  */
-export const UpdateHistory = async (req, res) => {
+export const LogDelete = async (req, res) => {
+    const { id } = req.body;
 
     try {
-        const [rows] = await Pool.query("UPDATE history SET description = ? WHERE idHistory = ?", 
-        [req.body.description, req.body.idHistory]);
-        return res.status(200).json(rows);
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while updating the History." || err });
+        //Delete history in the database
+        const { historia } = await historyService.logDelete(id);
+        //Return the deleted history
+        res.json({ historia });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    
-}
+};
 
 /**
- * Logical Delete History
- * @param { History } req 
- * @param { response } res 
+ * Find by ID
+ * @param { History } req
+ * @param { response } res
  */
-export const LogDeleteHistory = async (req, res) => {
+export const FindById = async (req, res) => {
+    const { id } = req.body;
 
     try {
-        const [rows] = await Pool.query("UPDATE history SET status = 0 WHERE idHistory = ?", 
-        [req.body.id]);
+        //Read history by id from database
+        const rows = await historyService.findById(id);
         return res.status(200).json(rows);
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while deleting the History." || err });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    
-}
-
-export default Create
+};

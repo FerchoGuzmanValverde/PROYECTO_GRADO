@@ -1,101 +1,105 @@
-//Import dependencies
-import { Pool } from '../database/db.config.js'
+//Import Dependencies
+import * as patientService from "../services/patient.service.js";
+import * as patientValidator from "../validator/validators.js"
 
 /**
- * Create a new Patient
- * @param { Patient } req 
- * @param { response } res 
+ * CREATE
+ * @param { Patient } req
+ * @param { response } res
  */
 export const Create = async (req, res) => {
-    const { patientCode, patientName, patientFLN, patientSLN, idUser } = req.body;
+    const { nombres, primerApellido, segundoApellido, numeroCi, extensionCi, direccion, codigoPaciente, fechaNacimiento, descripcion } = req.body;
+    const { errors, isValid } = patientValidator.patientValidator(req.body);
+
+    if (!isValid) {
+        console.log("Ocurrio un error al insertar el paciente.")
+        return res.status(400).json(errors);
+    }
 
     try {
 
-        //Verify don't repeat patients
-        const [exist] = await Pool.query("SELECT * FROM patient WHERE patientName = ? AND patientFLN = ?", [patientName, patientFLN]);
-        if (exist.length>0)
-            return res.status(401).json({ message: 'El paciente ya esta registrado!!' });
-        
-        //Insert new patient
-        const [rows] = await Pool.query("INSERT INTO patient (patientCode, patientName, patientFLN, patientSLN, idUser) VALUES (?, ?, ?, ?, ?)",
-        [patientCode, patientName, patientFLN, patientSLN, idUser]);
-        return res.status(200).json(rows);
+        //Create patient in the database
+        const { result } = await patientService.create(nombres, primerApellido, segundoApellido, numeroCi, extensionCi, direccion, codigoPaciente, fechaNacimiento, descripcion);
 
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while creating the Patient." || err });
+        //Return the created patient
+        res.json({ result });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    
 }
 
 /**
- * Read Patients
- * @param { } req 
- * @param { response } res 
+ * READ ALL
+ * @param { } req
+ * @param { response } res
  */
-export const Read = async (req, res) => {
-
+export const ReadAll = async (req, res) => {
     try {
-        const [rows] = await Pool.query("SELECT * FROM patient");
+        //Read patients from database
+        const rows = await patientService.readAll();
         return res.status(200).json(rows);
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while reading Patients." || err });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    
 }
 
 /**
- * Read Patient with ID
- * @param { idPatient } req 
- * @param { response } res 
+ * UPDATE
+ * @param { Patient } req
+ * @param { response } res
  */
-export const ReadWithID = async (req, res) => {
-    
-    try {
-        const [rows] = await Pool.query("SELECT * FROM patient WHERE idPatient = ?", [req.body.id]);
-        return res.status(200).json(rows);
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while reading the Patient." || err });
+export const Update = async (req, res) => {
+    const { idPersona, nombres, primerApellido, segundoApellido, numeroCi, extensionCi, direccion, codigoPaciente, fechaNacimiento, descripcion } = req.body;
+    const { errors, isValid } = patientValidator.patientValidator(req.body);
+
+    if (!isValid) {
+        console.log("Ocurrio un error al actualizar el paciente.")
+        return res.status(400).json(errors);
     }
-    
+
+    try {
+
+        //Update patient in the database
+        const { result } = await patientService.update(idPersona, nombres, primerApellido, segundoApellido, numeroCi, extensionCi, direccion, codigoPaciente, fechaNacimiento, descripcion);
+
+        //Return the updated patient
+        res.json({ result });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 }
 
 /**
- * Update Patient
- * @param { Patient } req 
- * @param { response } res 
+ * LOGICAL DELETE
+ * @param { Person } req
+ * @param { response } res
  */
-export const UpdatePatient = async (req, res) => {
+export const LogDelete = async (req, res) => {
+    const { id } = req.body;
 
     try {
-        const [rows] = await Pool.query("UPDATE patient SET patientCode = ?, patientName = ?, patientFLN = ?, patientSLN = ? WHERE idPatient = ?", 
-        [req.body.patientCode, req.body.patientName, req.body.patientFLN, req.body.patientSLN, req.body.idPatient]);
-        return res.status(200).json(rows);
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while updating the Patient." || err });
+        //Delete patient in the database
+        const { person } = await patientService.logDelete(id);
+        //Return the deleted person
+        res.json({ person });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    
 }
 
 /**
- * Logical Delete Patient
- * @param { Patient } req 
- * @param { response } res 
+ * Find by ID
+ * @param { Patient } req
+ * @param { response } res
  */
-export const LogDeletePatient = async (req, res) => {
+export const FindById = async (req, res) => {
+    const { id } = req.body;
 
     try {
-        const [rows] = await Pool.query("UPDATE patient SET status = 0 WHERE idPatient = ?", 
-        [req.body.id]);
+        //Read patient by id from database
+        const rows = await patientService.findById(id);
         return res.status(200).json(rows);
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: "Some error occurred while deleting the Patient." || err });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    
-}
-
-export default Create
+};

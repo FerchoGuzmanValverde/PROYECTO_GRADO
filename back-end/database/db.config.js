@@ -10,4 +10,5 @@ export const Pool = createPool({
     user: process.env.user,
     database: process.env.database,
     password: process.env.password
-  });
+});
+
