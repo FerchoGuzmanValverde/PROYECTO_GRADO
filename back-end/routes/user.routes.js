@@ -1,43 +1,72 @@
 //Import dependencies
 import express from "express";
-import { Create, LogDeleteUser, Read, ReadWithID, UpdateUser } from "../controllers/user.controller.js"
 
-//Create routes
+import {
+    LogDelete,
+    ReadAll,
+    FindById,
+    Update,
+    AuthUser,
+    Me,
+    Create,
+    Logout
+} from "../controllers/user.controller.js";
+import { isAuthenticated } from "../middlewares/authentication.js";
+
+//Create router
 const router = express.Router();
 
 /**
- * Subscribe create user API
+ * Subs CREATE
  */
-router.post('/create-user', async (req, res)=> {
+router.post("/new-user", async (req, res) => {
     await Create(req, res);
-}); 
-
-/**
- * Subscribe read users API
- */
-router.get('/users', async (req, res) => {
-    await Read(req, res);
 });
 
 /**
- * Subscribe read users with id API
+ * Subs READ ALL
  */
-router.post('/read-user', async (req, res) => {
-    await ReadWithID(req, res);
+router.get("/read-users", async (req, res) => {
+    await ReadAll(req, res);
+})
+
+/**
+ * Subs READ WITH ID
+ */
+router.post("/read-user", async (req, res) => {
+    await FindById(req, res);
 });
 
 /**
- * Subscribe update user API
+ * Subs UPDATE
  */
-router.post('/update-user', async (req, res) => {
-    await UpdateUser(req, res);
+router.patch("/update-user", async (req, res) => {
+    await Update(req, res);
 });
 
 /**
- * Subscribe logical delete user API
+ * Subs LOGICAL DELETE
  */
-router.post('/delete-user', async (req, res) => {
-    await LogDeleteUser(req, res);
+router.delete("/delete-user", async (req, res) => {
+    await LogDelete(req, res);
 });
 
-export default router
+/**
+ * Subs AUTHENTICATION
+ */
+router.post("/login", async (req, res) => {
+    await AuthUser(req, res);
+});
+
+router.get("/me", isAuthenticated, async (req, res) => {
+    await Me(req, res);
+});
+
+/**
+ * Subs LOG OUT
+ */
+router.post("/logout", async (req, res) => {
+    await Logout(req, res);
+});
+
+export default router;

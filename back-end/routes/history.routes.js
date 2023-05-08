@@ -1,43 +1,50 @@
 //Import dependencies
 import express from "express";
-import { Create, LogDeleteHistory, Read, ReadWithID, UpdateHistory } from "../controllers/history.controller.js"
 
-//Create routes
+import {
+    LogDelete,
+    ReadAll,
+    FindById,
+    Update,
+    Create
+} from "../controllers/history.controller.js";
+
+//Create router
 const router = express.Router();
 
 /**
- * Subscribe create history API
+ * Subs CREATE
  */
-router.post('/create-history', async (req, res)=> {
+router.post("/new-history", async (req, res) => {
     await Create(req, res);
-}); 
-
-/**
- * Subscribe read histories API
- */
-router.get('/histories', async (req, res) => {
-    await Read(req, res);
 });
 
 /**
- * Subscribe read history with id API
+ * Subs READ ALL
  */
-router.post('/read-history', async (req, res) => {
-    await ReadWithID(req, res);
+router.get("/read-histories", async (req, res) => {
+    await ReadAll(req, res);
 });
 
 /**
- * Subscribe update history API
+ * Subs READ WITH ID
  */
-router.post('/update-history', async (req, res) => {
-    await UpdateHistory(req, res);
+router.post("/read-history", async (req, res) => {
+    await FindById(req, res);
 });
 
 /**
- * Subscribe logical delete history API
+ * Subs UPDATE
  */
-router.post('/delete-history', async (req, res) => {
-    await LogDeleteHistory(req, res);
+router.patch("/update-history", async (req, res) => {
+    await Update(req, res);
 });
 
-export default router
+/**
+ * Subs LOGICAL DELETE
+ */
+router.delete("/delete-history", async (req, res) => {
+    await LogDelete(req, res);
+});
+
+export default router;
